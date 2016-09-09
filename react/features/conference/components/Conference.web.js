@@ -1,6 +1,7 @@
 /* global $, APP */
 
 import React, { Component } from 'react';
+import JitsiMeetJS from '../../base/lib-jitsi-meet';
 import { connect as reactReduxConnect } from 'react-redux';
 
 import { connect, disconnect } from '../../base/connection';
@@ -47,6 +48,60 @@ class Conference extends Component {
         APP.translation.translateElement($('#videoconference_page'));
 
         this.props.dispatch(connect());
+
+        let init = true;
+
+        $('.valiantContainer').Valiant360({
+            crossOrigin: 'anonymous', // 'anonymous' or 'use-credentials'
+            clickAndDrag: true,       // use click-and-drag camera controls
+            flatProjection: false,    // map image to appear flat
+            fov: 35,                  // initial field of view
+            fovMin: 3,                // min field of view allowed
+            fovMax: 100,              // max field of view allowed
+            hideControls: true,       // hide player controls
+            lon: 0,                   // initial lon for camera angle
+            lat: 0,                   // initial lat for camera angle
+            loop: 'loop',             // video loops by default
+            muted: true,              // video muted by default
+            autoplay: true,           // video autoplays by default
+            videoid: 'largeVideo'
+        });
+
+        /**
+         * Show 360 video if nickName ends with 360
+         *
+         * @param {string} nickName - Check if it ends with 360.
+         * @returns {void}
+         */
+        function checkLargeVideo360(nickName) {
+            const largeVideoID = APP.UI.getLargeVideoID();
+            const members = APP.conference.listMembers();
+            let largeVideoName = nickName === undefined
+                ? APP.settings.getDisplayName() : nickName;
+
+            for (let i = 0; i < members.length; i++) {
+                if (largeVideoID === members[i]._id) {
+                    largeVideoName = members[i]._displayName;
+                }
+            }
+
+            if (largeVideoName.endsWith('360')) {
+                $('#largeVideo').hide();
+            } else {
+                $('#largeVideo').show();
+            }
+        }
+
+        APP.UI.addListener('UI.nickname_changed', checkLargeVideo360);
+        $('#largeVideo')[0].addEventListener('loadedmetadata', () => {
+            if (init) {
+                init = false;
+                APP.conference.addConferenceListener(
+                    JitsiMeetJS.events.conference.DISPLAY_NAME_CHANGED,
+                    checkLargeVideo360);
+            }
+            checkLargeVideo360();
+        });
     }
 
     /**
@@ -111,7 +166,9 @@ class Conference extends Component {
                                 src = '' />
                         </div>
                         <span id = 'remoteConnectionMessage' />
-                        <div id = 'largeVideoWrapper'>
+                        <div
+                            className = 'valiantContainer'
+                            id = 'largeVideoWrapper'>
                             <video
                                 autoPlay = { true }
                                 id = 'largeVideo'

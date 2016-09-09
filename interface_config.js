@@ -7,17 +7,17 @@ var interfaceConfig = { // eslint-disable-line no-unused-vars
     DEFAULT_BACKGROUND: '#474747',
     INITIAL_TOOLBAR_TIMEOUT: 20000,
     TOOLBAR_TIMEOUT: 4000,
-    DEFAULT_REMOTE_DISPLAY_NAME: "Fellow Jitster",
+    DEFAULT_REMOTE_DISPLAY_NAME: "Fellow VCuber",
     DEFAULT_LOCAL_DISPLAY_NAME: "me",
-    SHOW_JITSI_WATERMARK: true,
-    JITSI_WATERMARK_LINK: "https://jitsi.org",
+    SHOW_JITSI_WATERMARK: false,
+    JITSI_WATERMARK_LINK: "http://sg.vcube.com/",
     // if watermark is disabled by default, it can be shown only for guests
-    SHOW_WATERMARK_FOR_GUESTS: true,
+    SHOW_WATERMARK_FOR_GUESTS: false,
     SHOW_BRAND_WATERMARK: false,
     BRAND_WATERMARK_LINK: "",
     SHOW_POWERED_BY: false,
     GENERATE_ROOMNAMES_ON_WELCOME_PAGE: true,
-    APP_NAME: "Jitsi Meet",
+    APP_NAME: "VCube Meet",
     LANG_DETECTION: false,    // Allow i18n to detect the system language
     INVITATION_POWERED_BY: true,
     /**
