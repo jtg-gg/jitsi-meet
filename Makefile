@@ -2,6 +2,7 @@ BUILD_DIR = build
 CLEANCSS = ./node_modules/.bin/cleancss
 DEPLOY_DIR = libs
 LIBJITSIMEET_DIR = node_modules/lib-jitsi-meet/
+VALIANT360_BUILD_DIR = ./node_modules/jquery.valiant360/build
 NODE_SASS = ./node_modules/.bin/node-sass
 NPM = npm
 OUTPUT_DIR = .
@@ -24,7 +25,7 @@ compile:
 clean:
 	rm -fr $(BUILD_DIR)
 
-deploy: deploy-init deploy-appbundle deploy-lib-jitsi-meet deploy-css deploy-local
+deploy: deploy-init deploy-appbundle deploy-lib-jitsi-meet deploy-css deploy-valiant360 deploy-local
 
 deploy-init:
 	mkdir -p $(DEPLOY_DIR)
@@ -49,6 +50,14 @@ deploy-css:
 	$(NODE_SASS) $(STYLES_MAIN) $(STYLES_BUNDLE) && \
 	$(CLEANCSS) $(STYLES_BUNDLE) > $(STYLES_DESTINATION) ; \
 	rm $(STYLES_BUNDLE)
+
+deploy-valiant360:
+	cp $(VALIANT360_BUILD_DIR)/jquery.valiant360.js \
+	$(VALIANT360_BUILD_DIR)/jquery.valiant360.min.js \
+	$(VALIANT360_BUILD_DIR)/js/jquery-1.7.2.min.js \
+	$(VALIANT360_BUILD_DIR)/js/three.min.js \
+	$(DEPLOY_DIR) && \
+	cp -r $(VALIANT360_BUILD_DIR)/css $(OUTPUT_DIR)
 
 deploy-local:
 	([ ! -x deploy-local.sh ] || ./deploy-local.sh)
