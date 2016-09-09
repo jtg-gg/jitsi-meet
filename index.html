@@ -14,8 +14,55 @@
     <script><!--#include virtual="/interface_config.js" --></script>
     <script src="libs/lib-jitsi-meet.min.js?v=139"></script>
     <script src="libs/app.bundle.min.js?v=139"></script>
+    <script src="libs/three.min.js"></script>
+    <script src="libs/jquery.valiant360.min.js"></script>
+    <script>
+        var init = true;
+        $(document).ready(function () {
+            $('.valiantContainer').Valiant360({
+                crossOrigin: 'anonymous',   // valid keywords: 'anonymous' or 'use-credentials'
+                clickAndDrag: true,    // use click-and-drag camera controls
+                flatProjection: false,  // map image to appear flat (often more distorted)
+                fov: 35,                // initial field of view
+                fovMin: 3,              // min field of view allowed
+                fovMax: 100,                // max field of view allowed
+                hideControls: true,    // hide player controls
+                lon: 0,                 // initial lon for camera angle
+                lat: 0,                 // initial lat for camera angle
+                loop: "loop",           // video loops by default
+                muted: true,            // video muted by default
+                autoplay: true,         // video autoplays by default
+                videoid: "largeVideo"
+            });
+            function checkLargeVideo360() {
+                const largeVideoID = APP.UI.getLargeVideoID();
+                const members = APP.conference.listMembers();
+                var largeVideoName = arguments.length == 1 ? arguments[0] : APP.settings.getDisplayName();
+                for (var i = 0; i < members.length; i++) {
+                    if (largeVideoID == members[i]._id) {
+                        largeVideoName = members[i]._displayName;
+                    }
+                }
+
+                if (largeVideoName.endsWith("360"))
+                    $('#largeVideo').hide();
+                else
+                    $('#largeVideo').show();
+
+            }
+            APP.UI.addListener("UI.nickname_changed", checkLargeVideo360);
+            $('#largeVideo')[0].addEventListener("loadedmetadata", function() {
+                if (init) {
+                    init = false;
+                    APP.conference.addConferenceListener(JitsiMeetJS.events.conference.DISPLAY_NAME_CHANGED,checkLargeVideo360);
+                }
+                checkLargeVideo360();
+            });
+        });
+    </script>
     <!--#include virtual="title.html" -->
     <link rel="stylesheet" href="css/all.css"/>
+    <link rel="stylesheet" href="css/valiant360.css"/>
     <!--#include virtual="plugin.head.html" -->
   </head>
   <body>
@@ -161,7 +208,7 @@
                     <img id="dominantSpeakerAvatar" src=""/>
                     <canvas id="dominantSpeakerAudioLevel"></canvas>
                 </div>
-                <div id="largeVideoWrapper">
+                <div id="largeVideoWrapper"class="valiantContainer">
                     <video id="largeVideo" muted="true" autoplay></video>
                 </div>
                 <span id="videoConnectionMessage"></span>

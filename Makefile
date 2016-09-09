@@ -9,6 +9,7 @@ BROWSERIFY_FLAGS = -d
 OUTPUT_DIR = .
 LIBJITSIMEET_DIR = node_modules/lib-jitsi-meet/
 IFRAME_API_DIR = ./modules/API/external
+VALIANT360_BUILD_DIR = ./node_modules/jquery.valiant360/build
 
 all: update-deps compile compile-iframe-api uglify uglify-iframe-api deploy clean
 
@@ -24,7 +25,7 @@ compile-iframe-api:
 clean:
 	rm -f $(OUTPUT_DIR)/app.bundle.* $(OUTPUT_DIR)/external_api.*
 
-deploy: deploy-init deploy-appbundle deploy-lib-jitsi-meet deploy-css deploy-local
+deploy: deploy-init deploy-appbundle deploy-lib-jitsi-meet deploy-css deploy-valiant360 deploy-local
 
 deploy-init:
 	mkdir -p $(DEPLOY_DIR)
@@ -46,6 +47,14 @@ deploy-lib-jitsi-meet:
 	$(DEPLOY_DIR)
 deploy-css:
 	(cd css; cat $(CSS_FILES)) | $(CLEANCSS) > css/all.css
+
+deploy-valiant360:
+	cp $(VALIANT360_BUILD_DIR)/jquery.valiant360.js \
+	$(VALIANT360_BUILD_DIR)/jquery.valiant360.min.js \
+	$(VALIANT360_BUILD_DIR)/js/jquery-1.7.2.min.js \
+	$(VALIANT360_BUILD_DIR)/js/three.min.js \
+	$(DEPLOY_DIR) && \
+	cp -r $(VALIANT360_BUILD_DIR)/css $(OUTPUT_DIR)
 
 deploy-local:
 	([ ! -x deploy-local.sh ] || ./deploy-local.sh)
