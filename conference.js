@@ -281,6 +281,7 @@ function createLocalTracks (options, checkForPermissionPrompt) {
             // copy array to avoid mutations inside library
             devices: options.devices.slice(0),
             resolution: config.resolution,
+            bandwidth: config.bandwidth,
             cameraDeviceId: typeof options.cameraDeviceId === 'undefined' ||
                     options.cameraDeviceId === null
                 ? APP.settings.getCameraDeviceId()
