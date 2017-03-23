@@ -87,7 +87,7 @@ android {
     buildToolsVersion '23.0.1'
 
     defaultConfig {
-        applicationId 'org.jitsi.meet'
+        applicationId 'com.vcube.meet'
         minSdkVersion 16
         targetSdkVersion 22
         versionCode Integer.parseInt("${version}")
