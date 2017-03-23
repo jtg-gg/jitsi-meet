@@ -252,7 +252,7 @@ export class AbstractApp extends Component {
             }
         }
 
-        return 'https://meet.jit.si';
+        return 'https://sgdvjitsia01.vcube.sg';
     }
 
     /**
